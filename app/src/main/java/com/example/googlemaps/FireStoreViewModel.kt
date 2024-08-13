@@ -26,7 +26,53 @@ class FireStoreViewModel:ViewModel() {
                 val userList = mutableListOf<User>()
                 for(document in result ){
                     val userId = document.id
+                    val displayName = document.getString("displayName")?: ""
+                    val email = document.getString("email")?: ""
+                    val location = document.getString("location")?: ""
+
+                    userList.add(User(userId,displayName,email,location))
+
                 }
+                callback(userList)
+            }
+            .addOnFailureListener {  }
+    }
+
+    fun updateUser(userId: String,displayName: String,location: String){
+        val user = hashMapOf(
+            "displayName" to displayName,
+            "location" to location
+        )
+
+        val userMap = user.toMap()
+        userCollection.document(userId).update(userMap)
+            .addOnSuccessListener {  }
+            .addOnFailureListener {  }
+    }
+
+    fun updateUserLocation(userId: String,location: String){
+        if (userId.isEmpty()){
+            return
+        }
+
+        val user = hashMapOf(
+            "location" to location
+        )
+        val userMap = user.toMap()
+        userCollection.document(userId).update(userMap)
+            .addOnSuccessListener {  }
+            .addOnFailureListener {  }
+
+    }
+
+    fun getUser(userId: String,callback: (User?) -> Unit){
+        userCollection.document(userId).get()
+            .addOnSuccessListener { documentSnapShot->
+                val user = documentSnapShot.toObject(User::class.java)
+                callback(user)
+            }
+            .addOnFailureListener {
+                callback(null)
             }
     }
 
