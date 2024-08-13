@@ -76,4 +76,16 @@ class FireStoreViewModel:ViewModel() {
             }
     }
 
+    fun getUserLocation(userId: String,callback: (String?) -> Unit){
+        userCollection.document(userId).get()
+            .addOnSuccessListener { documentSnapShot->
+                val location = documentSnapShot.getString("location")?: ""
+                callback(location)
+
+            }
+            .addOnFailureListener {
+                callback("")
+            }
+    }
+
 }
