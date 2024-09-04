@@ -19,5 +19,10 @@ class LocationViewModel:ViewModel() {
             }
 
         })
+
+    }
+
+    fun initializeFusedLocationClient(client: FusedLocationProviderClient){
+        fusedLocationClient = client
     }
 }
